@@ -10,3 +10,5 @@ rots:{(md[x])'(|(x-y)+!y)+y^!x*y}
 rotsi:{(,!x),rots[x;y-1]}
 / all `x`-sized groups of a set `y` items large
 groupn:{ps:perms y;ps[&(x=)'(+/)'ps]}
+/ add values at `c` to indices `b` of array `a`
+paste:{[a;b;c]{@[x;y;z]}/[a;b;c]}
