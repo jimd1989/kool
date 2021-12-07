@@ -10,7 +10,7 @@ groupn:{ps:perms y;ps[&(x=)'(+/)'ps]}
 paste:{[a;b;c]{@[x;y;z]}/[a;b;c]}
 / set all values of array `y` to zero except index `x`
 isolate:{@[(#y)#0;x;y@x]}
-/ cartesian product of `x` and `y`
+/ cartesian grouping of arrays `x` and `y`
 cross:{x,/:\:y}
 
 / rotation: i = inclusive, negative `x` = left
@@ -21,3 +21,8 @@ rotsri:{(,!y),rotsr[x-1;y]}
 rots:{$[x<0;rotsl[abs x;y];rotsr[x;y]]}
 rotsi:{$[x<0;rotsli[abs x;y];rotsri[x;y]]}
 rot:{y[,/((abs x)-1)_(rots[x;#y])]}
+
+/ getting diagonal runs of matrices
+diagonals:{c:,/cross[!x;!y];c[(=(+/)'c)[]]}
+diagl:{x ./:/:diagonals[#x;#x@0]}
+diagr:{(|'x) ./:/:diagonals[#x;#x@0]}
