@@ -46,3 +46,11 @@ windowi:{[a;b]{1_x,y}\[a#0N;b,(a-1)#0N]}
 / convert a binary array `x` to an integer, and back
 bitsi:{+/x*(-#x)#twon}
 ibits:{[a]1_|md[2]'{_x%2}\:a}
+
+/ odd and even indices of array `x`
+odd:{x[&md[2]'!#x]}
+even:{x[&~md[2]'!#x]}
+
+/ other exercise ideas
+/ levenshtein
+/ fft
