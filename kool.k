@@ -26,3 +26,7 @@ rot:{y[,/((abs x)-1)_(rots[x;#y])]}
 diagonals:{c:,/cross[!x;!y];c[(=(+/)'c)[]]}
 diagl:{x ./:/:diagonals[#x;#x@0]}
 diagr:{(|'x) ./:/:diagonals[#x;#x@0]}
+
+/ window `a` width across array `b` "i" = includes ramp up/down to full window
+window:{[a;b](a-1)_{1_x,y}\[a#0;b]}
+windowi:{[a;b]{1_x,y}\[a#0N;b,(a-1)#0N]}
