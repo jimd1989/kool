@@ -10,6 +10,8 @@ groupn:{ps:perms y;ps[&(x=)'(+/)'ps]}
 paste:{[a;b;c]{@[x;y;z]}/[a;b;c]}
 / set all values of array `y` to zero except index `x`
 isolate:{@[(#y)#0;x;y@x]}
+/ cartesian product of `x` and `y`
+cross:{x,/:\:y}
 
 / rotation: i = inclusive, negative `x` = left
 rotsli:{(md[y])'(!x)+x^!x*y}
