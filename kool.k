@@ -1,5 +1,17 @@
+/ constants
+pi:3.141592653589793115997963468544185161590576171875
+euler:2.718281828459045090795598298427648842334747314453125
+phi:1.618033988749894848204586834365638117720309179805
+
+/ `x` to the power of `y`
+pow:{*/y#x}
 / custom modulo of `x` and `y`, because builtin acts weird
 md:{y-x*_y%x}
+
+/ useful serieses and sieves
+twon:|pow[2]'!64
+abc:"abcdefghijklmnopqrstuvwxyzABCEFGHIJKLMNOPQRSTUVWXYZ"
+
 / identity matrix `x` rows long
 id:{xs:1+!x;1=xs%\:xs}
 / all permutations of a set with `x` members
@@ -30,3 +42,7 @@ diagr:{(|'x) ./:/:diagonals[#x;#x@0]}
 / window `a` width across array `b` "i" = includes ramp up/down to full window
 window:{[a;b](a-1)_{1_x,y}\[a#0;b]}
 windowi:{[a;b]{1_x,y}\[a#0N;b,(a-1)#0N]}
+
+/ convert a binary array `x` to an integer, and back
+bitsi:{+/x*(-#x)#twon}
+ibits:{[a]1_|md[2]'{_x%2}\:a}
