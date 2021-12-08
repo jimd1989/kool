@@ -3,10 +3,14 @@ pi:3.141592653589793115997963468544185161590576171875
 euler:2.718281828459045090795598298427648842334747314453125
 phi:1.618033988749894848204586834365638117720309179805
 
-/ `x` to the power of `y`
-pow:{*/y#x}
 / custom modulo of `x` and `y`, because builtin acts weird
 md:{y-x*_y%x}
+/ fractional part of float `x`
+frac:{md[_x;x]}
+
+/ `x` to the power of `y`
+pow:{*/y#x}
+powf:{exp y * log x}
 
 / useful serieses and sieves
 twon:|pow[2]'!64
@@ -51,6 +55,11 @@ ibits:{[a]1_|md[2]'{_x%2}\:a}
 odd:{x[&md[2]'!#x]}
 even:{x[&~md[2]'!#x]}
 
-/ other exercise ideas
+/ convert midi note `x` to frequency
+midifreq:{8.1757989156*powf[2;x%12]}
+
+/ other feature ideas
+/ linear interpolation
 / levenshtein
 / fft
+/ standard deviation
