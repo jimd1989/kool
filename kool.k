@@ -15,6 +15,14 @@ powf:{exp y * log x}
 / useful serieses and sieves
 twon:|pow[2]'!64
 abc:"abcdefghijklmnopqrstuvwxyzABCEFGHIJKLMNOPQRSTUVWXYZ"
+digits:"0123456789"
+
+/ odd and even indices of array `x`
+odd:{x[&md[2]'!#x]}
+even:{x[&~md[2]'!#x]}
+
+/ k combinator: only return `x`
+const:{[x;y]x}
 
 / identity matrix `x` rows long
 id:{xs:1+!x;1=xs%\:xs}
@@ -28,6 +36,19 @@ paste:{[a;b;c]{@[x;y;z]}/[a;b;c]}
 isolate:{@[(#y)#0;x;y@x]}
 / cartesian grouping of arrays `x` and `y`
 cross:{x,/:\:y}
+
+/if `y` is a subset of `x`
+subset:{*/(#x)>/:x?/:y}
+
+/ TODO: zeroing out nulls, inferred csv
+/ infer the type of atom `x`, ranked by inclusivity
+inferr:{ds:".-0123456789";$[subset[ds;x];$[subset[1_ds;x];$[subset[2_ds;x];`4i;`3j];`2f];`1lc]}
+/ infer the most inclusive type of all in `x`
+infera:(`n$1_$*^inferr')
+/ infer the type of atom `x`
+infer:{`n$1_$inferr x}
+/ where `x` is list of types and `y` is 0:file.csv, make table
+fromcsv:{ys:(","\)'y;k:(`n$)'*ys;v:1_ys;t:k!+v;+{[a;k;s]@[a;k;(s$)']}/[t;!t;x]}
 
 / rotate array of `y` items -left/+right `x` times, "i" functions are inclusive
 rotsli:{md[y]'(!x)+/:\:!y}
@@ -43,7 +64,7 @@ diagonals:{c:,/cross[!x;!y];c[(=(+/)'c)[]]}
 diagl:{x ./:/:diagonals[#x;#x@0]}
 diagr:{(|'x) ./:/:diagonals[#x;#x@0]}
 
-/ window `a` width across array `b` "i" = includes ramp up/down to full window
+/ sliding window `a` width across array `b` "i" = includes ramp up/down to full window
 window:{[a;b](a-1)_{1_x,y}\[a#0;b]}
 windowi:{[a;b]{1_x,y}\[a#0N;b,(a-1)#0N]}
 
@@ -51,15 +72,15 @@ windowi:{[a;b]{1_x,y}\[a#0N;b,(a-1)#0N]}
 bitsi:{+/x*(-#x)#twon}
 ibits:{[a]1_|md[2]'{_x%2}\:a}
 
-/ odd and even indices of array `x`
-odd:{x[&md[2]'!#x]}
-even:{x[&~md[2]'!#x]}
-
 / convert midi note `x` to frequency
 midifreq:{8.1757989156*powf[2;x%12]}
+
+/ fft in progress scratchpad
+/ butterfly indices for a `x` item series, where `x` is power of 2
+butterfly:{[a]$[1=+/ibits a;{(even x),odd x}\:!a;,0N]}
+fft:{reim:x,(#x)#0;reim[butterfly(#reim)]}
 
 / other feature ideas
 / linear interpolation
 / levenshtein
-/ fft
 / standard deviation
