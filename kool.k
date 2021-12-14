@@ -21,11 +21,17 @@ digits:"0123456789"
 odd:{x[&md[2]'!#x]}
 even:{x[&~md[2]'!#x]}
 
+/ i combinator: return `x` itself
+id:{x}
 / k combinator: only return `x`
 const:{[x;y]x}
+/ chain dyad `h` against the outputs of monads `g` and `f`
+fork:{[h;g;f;x]h[g x;f x]}
+/ flip arguments `y` and `z` to function `x`
+flip:{x[z;y]}
 
 / identity matrix `x` rows long
-id:{xs:1+!x;1=xs%\:xs}
+identity:{xs:1+!x;1=xs%\:xs}
 / all permutations of a set with `x` members
 perms:{+!x#2}
 / all `x`-sized groups of a set `y` items large
@@ -37,18 +43,26 @@ isolate:{@[(#y)#0;x;y@x]}
 / cartesian grouping of arrays `x` and `y`
 cross:{x,/:\:y}
 
-/if `y` is a subset of `x`
+/ return the first suffix of `x` where `y` holds true, where `x` is ,(pred;suffix)
+cond:{ps:(*)'x;(*x[&ps@\:y])1}
+
+/ if `y` is a subset of `x`
 subset:{*/(#x)>/:x?/:y}
 
-/ TODO: zeroing out nulls, inferred csv
 / infer the type of atom `x`, ranked by inclusivity
-inferr:{ds:".-0123456789";$[subset[ds;x];$[subset[1_ds;x];$[subset[2_ds;x];`4i;`3j];`2f];`1lc]}
+infer:{ds:"-.0123456789";$[subset[ds;x];$[1=+/"."=x;1;$["-"=*x;2;3]];0]}
 / infer the most inclusive type of all in `x`
-infera:(`n$1_$*^inferr')
-/ infer the type of atom `x`
-infer:{`n$1_$inferr x}
-/ where `x` is list of types and `y` is 0:file.csv, make table
+infera:{`lc`f`j`i[&/infer':x]}
+/ if `x` is not `lc or `i, fill in nulls in string array `y` with zero strings
+fillz:{$[(`i=x)&`lc=x;y;@[y;&0=#'y;"0"]]}
+/ parse a column `x` into its inferred type
+parsec:{s:infera x;(s$)'fillz[s]x}
+/ make inferred table from `x`, where `x` is 0:file.csv, slow as shit atm
+ifromcsv:{xs:(","\)':x;k:(`n$)'*xs;+k!parsec':+1_xs}
+/ where `x` is an explicit list of types and `y` is 0:file.csv, make table
 fromcsv:{ys:(","\)'y;k:(`n$)'*ys;v:1_ys;t:k!+v;+{[a;k;s]@[a;k;(s$)']}/[t;!t;x]}
+/ turn table `x` into csv format, ready to write with file 0: table
+tocsv:{t:+x;h:(","/$!t);b:","/'$'+t[];(,h),b}
 
 / rotate array of `y` items -left/+right `x` times, "i" functions are inclusive
 rotsli:{md[y]'(!x)+/:\:!y}
