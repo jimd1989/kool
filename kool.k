@@ -90,6 +90,10 @@ ibits:{[a]1_|md[2]'{_x%2}\:a}
 midifreq:{8.1757989156*powf[2;x%12]}
 
 / fft in progress scratchpad
+cis:{(cos x;sin x)}
+/ discrete fourrier transform: slow
+dft:{b:{[k;n;N](-2*pi*k*n)%N};N:#x;+/+x*/:{cis y x}[N]''(!N){x[y]z}[b]/:\:!N}
+cmult:{r:((x 0)*y 0)-(x 1)*y 1;i:((x 1)* y 0)+(x 0)*y 1;(r;i)}
 / butterfly indices for a `x` item series, where `x` is power of 2
 butterfly:{[a]$[1=+/ibits a;{(even x),odd x}\:!a;,0N]}
 fft:{reim:x,(#x)#0;reim[butterfly(#reim)]}
