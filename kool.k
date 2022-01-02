@@ -67,6 +67,10 @@ gramsci:{$[1=#x;x;{v:*x;u:gramsci 1_x;gs:+/app[v;{(-y)*vdot[x;y]%vdot[y;y]}[v]'|
 orthonor:{+{%'[x;{sqrt vdot[x;x]}'x]}(|)gramsci(|+x)}
 / qr decomposition of matrix `x` (no inverse for R, but works anyway?)
 qr:{Q:orthonor x;R:mmu[mmu[mmu[+Q;Q];+Q];x];R;`Q`R!(Q;R)}
+/ qr algorithm for eigenvalues and vectors on symmetrical matrix `x`, `y` iterations
+/ TODO - generalize to non-symmetrical, format eigens better
+/ TODO - confirm assumption that eigenvalue n refers to column n
+qra:{qs:{[x;y]{q:qr(*x);(mmu[q`R;q`Q];q`Q)}x}\[(x;identity(#x));!y];d:diagr[**|qs];val:d(_(#d)%2);vec:{x%last x}'+mmu/qs[;1];|^+`val`vec!(val;vec)}
 
 / return the first suffix of `x` where `y` holds true, where `x` is ,(pred;suffix)
 cond:{ps:(*)'x;(*x[&ps@\:y])1}
