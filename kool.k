@@ -1,3 +1,5 @@
+/ functions written for theoretical clarity over performance (sorry)
+
 / constants
 pi:3.141592653589793115997963468544185161590576171875
 euler:2.718281828459045090795598298427648842334747314453125
@@ -30,18 +32,41 @@ fork:{[h;g;f;x]h[g x;f x]}
 / flip arguments `y` and `z` to function `x`
 flip:{x[z;y]}
 
-/ identity matrix `x` rows long
-identity:{xs:1+!x;1=xs%\:xs}
+/ append vector `x` to matrix `y`
+app:{(,(x)),y}
 / all permutations of a set with `x` members
 perms:{+!x#2}
 / all `x`-sized groups of a set `y` items large
 groupn:{ps:perms y;ps[&(x=)'(+/)'ps]}
-/ add values at `c` to indices `b` of array `a`
+/ add values at `c` to indices `b` of vector `a`
 paste:{[a;b;c]{@[x;y;z]}/[a;b;c]}
 / set all values of array `y` to zero except index `x`
 isolate:{@[(#y)#0;x;y@x]}
-/ cartesian grouping of arrays `x` and `y`
+/ cartesian grouping of vectors `x` and `y`
 cross:{x,/:\:y}
+/ if `x` is member of `y`
+member:{(#y)>y?x}
+
+/ magnitude of vector `x`
+mag:{sqrt+/sqr'x}
+/ normalize vector `x`
+normal:{x%mag x}
+/ vector dot product between `x` and `y`
+vdot:(+/*)
+/ multiply matrices `x` and `y`
+mmu:{x(+/*)/:\:+y}
+/ identity matrix `x` by `x`
+identity:{xs:1+!x;1=xs%\:xs}
+/ centering matrix `x` by `x`
+center:{(identity x)-(1%x)*x^(x*x)#1}
+/ covariance matrix of matrix `x`
+covar:{n:#x;cx:mmu[center n;x];mmu[+cx;cx]%n-1}
+/ perform gram-schmidt on a reversed matrix `x`, with output reversed as well (slow and ugly?)
+gramsci:{$[1=#x;x;{v:*x;u:gramsci 1_x;gs:+/app[v;{(-y)*vdot[x;y]%vdot[y;y]}[v]'|u];app[gs;u]}x]}
+/ orthonormalize matrix `x` (Q in QR decomposition)
+orthonor:{+{%'[x;{sqrt vdot[x;x]}'x]}(|)gramsci(|+x)}
+/ qr decomposition of matrix `x` (no inverse for R, but works anyway?)
+qr:{Q:orthonor x;R:mmu[mmu[mmu[+Q;Q];+Q];x];R;`Q`R!(Q;R)}
 
 / return the first suffix of `x` where `y` holds true, where `x` is ,(pred;suffix)
 cond:{ps:(*)'x;(*x[&ps@\:y])1}
@@ -93,10 +118,9 @@ midifreq:{8.1757989156*powf[2;x%12]}
 cis:{(cos x;sin x)}
 / discrete fourrier transform: slow
 dft:{b:{[k;n;N](-2*pi*k*n)%N};N:#x;+/+x*/:{cis y x}[N]''(!N){x[y]z}[b]/:\:!N}
-cmult:{r:((x 0)*y 0)-(x 1)*y 1;i:((x 1)* y 0)+(x 0)*y 1;(r;i)}
+cmul:{s:(1=#x)|1=#y;$[s;x*y;(((x 0)*y 0)-(x 1)*y 1;((x 1)* y 0)+(x 0)*y 1)]}
 / butterfly indices for a `x` item series, where `x` is power of 2
 butterfly:{[a]$[1=+/ibits a;{(even x),odd x}\:!a;,0N]}
-fft:{reim:x,(#x)#0;reim[butterfly(#reim)]}
 
 / other feature ideas
 / linear interpolation
