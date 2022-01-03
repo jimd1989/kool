@@ -47,6 +47,10 @@ cross:{x,/:\:y}
 / if `x` is member of `y`
 member:{(#y)>y?x}
 
+/ standard deviation of vector `x`
+stddev:{sqrt(+/sqr x-avg x)%#x}
+/ standardize matrix `x`
+std:{tx:+x;+({x-avg'x}tx)%stddev'tx}
 / magnitude of vector `x`
 mag:{sqrt+/sqr'x}
 / normalize vector `x`
@@ -129,4 +133,3 @@ butterfly:{[a]$[1=+/ibits a;{(even x),odd x}\:!a;,0N]}
 / other feature ideas
 / linear interpolation
 / levenshtein
-/ standard deviation
