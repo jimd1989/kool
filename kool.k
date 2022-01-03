@@ -74,7 +74,10 @@ qr:{Q:orthonor x;R:mmu[mmu[mmu[+Q;Q];+Q];x];R;`Q`R!(Q;R)}
 / qr algorithm for eigenvalues and vectors on symmetrical matrix `x`, `y` iterations
 / TODO - generalize to non-symmetrical, format eigens better
 / TODO - confirm assumption that eigenvalue n refers to column n
-qra:{qs:{[x;y]{q:qr(*x);(mmu[q`R;q`Q];q`Q)}x}\[(x;identity(#x));!y];d:diagr[**|qs];val:d(_(#d)%2);vec:{x%last x}'+mmu/qs[;1];|^+`val`vec!(val;vec)}
+qra:{qs:{[x;y]{q:qr(*x);(mmu[q`R;q`Q];q`Q)}x}\[(x;identity(#x));!y];d:diagr[**|qs];val:d(_(#d)%2);vec:normal'+mmu/qs[;1];|^+`val`vec!(val;vec)}
+/ for table `x`, iterations `y`, and variance coverage [0,1.0] `z`, return PCA table with eigens, variable weights, and PCA output data
+/ TODO - easier to interpret weighting
+pca:{X:std[+(+x)[]];W:qra[covar X;y];C:(!x)!+{v:x`val;vc:x`vec;m:+/v;vc[&>[y;+\%[v;m]]]}[W;z];D:mmu[X;C[]];`eigens`weights`data!(W;C;D)}
 
 / return the first suffix of `x` where `y` holds true, where `x` is ,(pred;suffix)
 cond:{ps:(*)'x;(*x[&ps@\:y])1}
